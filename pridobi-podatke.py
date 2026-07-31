@@ -18,7 +18,7 @@ teme_nagrada=[
 def koda_za_htmlje(leto):    
     for stevilo in range(1901, leto + 1):
         for tema in teme_nagrada:
-            url='https://www.nobelprize.org/prizes/'+ tema +'/'+ str(stevilo) +'/summary/' 
+            url='https://www.nobelprize.org/prizes/'+ tema +'/'+ str(stevilo) +'/summary/' #koda za pobiranje
                 
     
             try:
