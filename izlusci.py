@@ -5,6 +5,10 @@ import os
 mapa_s_htmlji = 'htmlji'
 
 def po_datot(mapa_s_htmlji):
+    
+    slovar={}
+
+
     for html in os.listdir(mapa_s_htmlji):
         if html.endswith(".html"):
             pot = os.path.join(mapa_s_htmlji, html) 
@@ -27,11 +31,31 @@ def po_datot(mapa_s_htmlji):
                     preberi_html,
                     re.DOTALL
                     )
-            print(vrsta_nagrade,dobitnik_nagrade,priimki_dobitnikov)
+                #print(dobitnik_nagrade,vrsta_nagrade)
+                for nagra in vrsta_nagrade:
+                    #print(nagra)
+                    nova=popravi_nagradi(nagra)
+                    slovar[nova]=popravi_imena_brez_t(dobitnik_nagrade)
+    print(slovar) #da slovar v katerem je seznam nagrajencev po vrstah nagrad
 
-                
+   
+
+def popravi_imena_brez_t(seznam): #funkcija ki bo popravila da bo brez t ja
+    sez=[] #dam v seznam da bo tam brez t jev
+    for t in seznam:
+
+        popravljeno_ime = t.strip()
+        sez.append(popravljeno_ime)
+    return sez
+
+def popravi_nagradi(nagr): #popravi ime da ni t-jev
+    nova_nagr = nagr.strip()
+    return nova_nagr
+    #print(popravljeno_ime)    
+    #return popravljeno_ime      
 
 po_datot(mapa_s_htmlji)
+
 
 
 
