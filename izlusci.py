@@ -1,5 +1,5 @@
-
-
+import requests
+import time
 import re
 import os
 
@@ -67,7 +67,7 @@ def popravi_nagradi(nagr): #popravi ime da ni t-jev
 
 
 def izlusci_vse_povezave_nagrajencev(mapa_s_htmlji):
-    slovar_prii={}
+    slovar_prii = {}
     for html in os.listdir(mapa_s_htmlji):
         if html.endswith(".html"):
             pot = os.path.join(mapa_s_htmlji, html) 
@@ -88,11 +88,52 @@ def izlusci_vse_povezave_nagrajencev(mapa_s_htmlji):
                 for povezava in povezave: #shrani v slovar povezave in priimke
                     for priimek in priimki_dobitnikov:
                         if priimek in povezava:
-                            slovar_prii[priimek] = povezava
-    print(slovar_prii)                
+                            slovar_prii[priimki_brez_posevnice(priimek)] = povezava
+    #print(slovar_prii)  
+                  
     return slovar_prii
 
+def priimki_brez_posevnice(niz):
+    novo=''
 
+    popravljen_priimek=niz.split("/")
+        #print(popravljen_priimek)
+    for popravljen in range(0,len(popravljen_priimek)):
+        novo += popravljen_priimek[popravljen]
+        novo+= '-' 
+    novo+=popravljen_priimek[-1]
+            #print(novo)
+        #nov_seznam.append(novo)
+            #print(popravljen_priimek)
+        #print(nov_seznam)
+    return novo
+
+#priimki_brez_posevnice(['slo/2002/prii','sdsads/ff/sds'])
+
+
+def pobere_o_nagrajencih(slovar_prii):
+
+    os.makedirs("nobelovi_nagrajenci", exist_ok=True)
+
+    for priimek, povezava in slovar_prii.items():
+        
+
+        try:
+            ime_dat = f'{priimek}.html'
+            odgovor = requests.get(povezava, headers=headers, timeout=10)
+            odgovor.raise_for_status()
+            vsebina = odgovor.text
+            with open(os.path.join("nobelovi_nagrajenci", ime_dat),"w",encoding="utf-8") as f:
+                 f.write(vsebina)        
+            print(f'Datoteka nobelova nagrada {ime_dat} ustvarjena')
+    
+               
+        except requests.exceptions.RequestException as e:
+            print(f"Napaka pri {povezava}: {e}")
+        
+        time.sleep(2)
+                    
+#pobere_o_nagrajencih(izlusci_vse_povezave_nagrajencev(mapa_s_htmlji))
 
 
 
