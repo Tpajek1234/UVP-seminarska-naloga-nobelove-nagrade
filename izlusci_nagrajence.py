@@ -73,10 +73,10 @@ def vse_v_slovar(ime_dobitnika, nagrada, rojstvo, smrt):
         ime1 = popravljeno
         datum1 = datum_rojstva_popravi(rojstvo_dan)
         leto_rojstva = rojstvo_leto
-        drzava_rojstva = drzava_rojstva_popravi(popravi_drzava(rojstvo_drzava))
+        drzava_rojstva = drzava_rojstva_popravi(odstrani_oklepaje(rojstvo_drzava))
         dan_smrti = datum_rojstva_popravi(smrt_dan)
         leto_smrti = smrt_leto
-        kraj_smrti = drzava_rojstva_popravi(popravi_drzava(smrt_drzava))
+        kraj_smrti = drzava_rojstva_popravi(odstrani_oklepaje(smrt_drzava))
         #print(kraj_smrti)
         podrocje = samo_nagrada
         leto_nagrade1 = leto
@@ -93,7 +93,7 @@ def vse_v_slovar(ime_dobitnika, nagrada, rojstvo, smrt):
         ime1 = popravljeno
         datum1 = datum_rojstva_popravi(rojstvo_dan)
         leto_rojstva = rojstvo_leto
-        drzava_rojstva = drzava_rojstva_popravi(popravi_drzava(rojstvo_drzava))
+        drzava_rojstva = drzava_rojstva_popravi(odstrani_oklepaje(rojstvo_drzava))
         dan_smrti = '/'
         leto_smrti = '/'
         kraj_smrti = '/'
@@ -196,7 +196,21 @@ def popravi_drzava(niz):
     #print(sestavi)
     return sestavi
 
-
+def odstrani_oklepaje(niz):
+    drzava = popravi_drzava(niz)
+    if '(' in drzava and ')' in drzava:
+        najdi_okl = drzava.find('(')
+        najdi_zakl = drzava.find(')')
+        if 'now ' in drzava:
+            return drzava[najdi_okl + 5: najdi_zakl]
+        else:
+            return drzava[najdi_okl + 1: najdi_zakl]
+ 
+    elif drzava.endswith(')'):
+        #print(drzava[0:len(drzava)-2])
+        return drzava[0:len(drzava)-1]
+    else:
+        return drzava
 
 
 def datum_rojstva_popravi(niz):
