@@ -4,14 +4,14 @@ import re
 import csv
 
 
-mapa_z_nagrajenci = 'nobelovi_nagrajenci'
+#mapa_z_nagrajenci = 'nobelovi_nagrajenci'
 
-def po_datot_z_nagrjajenci(mapa_z_nagrajenci):
+def po_datot_z_nagrjajenci():
     sez=[]
 
-    for html in os.listdir(mapa_z_nagrajenci):
+    for html in os.listdir('nobelovi_nagrajenci'):
         if html.endswith(".html"):
-            pot = os.path.join(mapa_z_nagrajenci, html) 
+            pot = os.path.join('nobelovi_nagrajenci', html) 
 
             with open(pot, encoding = 'utf-8') as d:
                 preberi_html = d.read()
@@ -47,27 +47,28 @@ def izlusci_o_nagrajencih(preberi_html):
     smrt = re.search(r'<p class="dead-date">Died:(.*?)</p>',
                      preberi_html,
                      re.DOTALL)
-    #print(vse_v_slovar(ime_dobitnika, nagrada, rojstvo, smrt))
+    print(vse_v_slovar(ime_dobitnika, nagrada, rojstvo, smrt))
     return vse_v_slovar(ime_dobitnika, nagrada, rojstvo, smrt)
 
 def vse_v_slovar(ime_dobitnika, nagrada, rojstvo, smrt):
     popravljeno = ime_apostrof(popravi_ime(ime_dobitnika.group(1)))
+    print(popravljeno)
     nagrada2 = odstrani_nobel_prize(popravi_ime(nagrada.group(1)))
     leto = loci_leto(nagrada2)
     samo_nagrada = loci(nagrada2)  
 
     if smrt:
-        razdeliti_rojstvo = loci_rojstva_smrt(popravi_ime(rojstvo.group(1)))
-        rojstvo_dan_leto = razdeliti_rojstvo[0]
-        rojstvo_dan = loci(rojstvo_dan_leto)
-        rojstvo_leto = loci_leto(rojstvo_dan_leto)
-        rojstvo_drzava = razdeliti_rojstvo[-1]
+        razdeliti_rojstvo = popravi_ime(rojstvo.group(1))
+        datum_rojstva = samo_datum_rojstva(razdeliti_rojstvo)
+        rojstvo_dan = loci(datum_rojstva)
+        rojstvo_leto = loci_leto(datum_rojstva)
+        rojstvo_drzava = samo_drzava1(razdeliti_rojstvo)
                 
-        razdeliti_smrt = loci_rojstva_smrt(popravi_ime(smrt.group(1)))
-        smrt_dan_leto = razdeliti_smrt[0]
-        smrt_dan = loci(smrt_dan_leto)
-        smrt_leto = loci_leto(smrt_dan_leto)
-        smrt_drzava = razdeliti_smrt[-1]
+        razdeliti_smrt = popravi_ime(smrt.group(1))
+        datum_smrti = samo_datum_rojstva(razdeliti_smrt)
+        smrt_dan = loci(datum_smrti)
+        smrt_leto = loci_leto(datum_smrti)
+        smrt_drzava = samo_drzava1(razdeliti_smrt)
 
         ime1 = popravljeno
         datum1 = datum_rojstva_popravi(rojstvo_dan)
@@ -76,17 +77,18 @@ def vse_v_slovar(ime_dobitnika, nagrada, rojstvo, smrt):
         dan_smrti = datum_rojstva_popravi(smrt_dan)
         leto_smrti = smrt_leto
         kraj_smrti = drzava_rojstva_popravi(popravi_drzava(smrt_drzava))
-        print(kraj_smrti)
+        #print(kraj_smrti)
         podrocje = samo_nagrada
         leto_nagrade1 = leto
         return v_slovar(ime1, datum1, leto_rojstva, drzava_rojstva, dan_smrti, leto_smrti, kraj_smrti, podrocje, leto_nagrade1)
         
     elif rojstvo:
-        razdeliti_rojstvo = loci_rojstva_smrt(popravi_ime(rojstvo.group(1)))
-        rojstvo_dan_leto = razdeliti_rojstvo[0]
-        rojstvo_dan = loci(rojstvo_dan_leto)
-        rojstvo_leto = loci_leto(rojstvo_dan_leto)
-        rojstvo_drzava = razdeliti_rojstvo[-1]
+        rojstvo_dan_leto = popravi_ime(rojstvo.group(1))
+        datum_rojstva = samo_datum_rojstva(rojstvo_dan_leto)
+        rojstvo_dan = loci(datum_rojstva)
+        rojstvo_leto = loci_leto(datum_rojstva)
+        rojstvo_drzava = samo_drzava1(rojstvo_dan_leto)
+        
 
         ime1 = popravljeno
         datum1 = datum_rojstva_popravi(rojstvo_dan)
@@ -166,56 +168,25 @@ def loci(nagrad):
     nagrada+=loci[len(loci)-2]
     return nagrada
 
-def loci_rojstva_smrt(niz):
-    if '(' not in niz:
-        if niz!='/':
-            niz1 = niz.split(',')
-            if len(niz1)==3:
-                datum, kraj, drzava = niz1
-                #print(datum, kraj, drzava)
-                return datum, kraj, drzava
-            elif len(niz1)==2:
-                datum, drzava = niz1
-                #print(datum, drzava)
-                return datum, drzava
-            elif len(niz1)==4:
-                datum, kraj, zvezna_drzava, drzava = niz1
-                #print(datum, kraj, zvezna_drzava, drzava)
-                return datum, kraj, zvezna_drzava, drzava
-            elif len(niz1)==5:
-                datum, kraj, zvezna_drzava, kraj2, drzava = niz1
-                #print(datum, kraj, zvezna_drzava, kraj2, drzava)
-                return datum, kraj, zvezna_drzava, kraj2, drzava
-            elif len(niz1)==1:
-                datum = niz1
-                #print(datum)
-                return datum
-    else:
-        if niz!='/':
-            niz1 = niz.split('(')
-            #print(niz1)
-            rojst_smrt = niz1[0]
-            tisti_cas = rojst_smrt.split(',')
 
-            if len(tisti_cas)==3:
-                datum, kraj, drzava = tisti_cas
-                #print(datum, kraj, drzava)
-                return datum, kraj, drzava
-            elif len(tisti_cas)==2:
-                datum, drzava = tisti_cas
-                #print(datum, drzava)
-                return datum, drzava
-            elif len(tisti_cas)==4:
-                datum, kraj, zvezna_drzava, drzava = tisti_cas
-                #print(datum, kraj, zvezna_drzava, drzava)
-                return datum, kraj, zvezna_drzava, drzava
-            elif len(tisti_cas)==1:
-                datum=tisti_cas
-                #print(datum)
-                return datum
-            
+def samo_drzava1(niz):
+    if ',' in niz:
+        loci_po_vejici = niz.split(',')
+        print(loci_po_vejici[-1])
+        return loci_po_vejici[-1]
+    else:
+        return '/'
+
+def samo_datum_rojstva(niz):
+    if ',' in niz:
+        loci_po_vejici = niz.split(',')
+        print(loci_po_vejici[0])
+        return loci_po_vejici[0]
+    else:
+        return niz
+    
 def popravi_drzava(niz):
-    nov=niz.split()
+    nov = niz.split()
     #print(nov)
     sestavi = ''
     for beseda in range(0,len(nov)-1):
@@ -224,6 +195,9 @@ def popravi_drzava(niz):
     sestavi+=nov[len(nov)-1]
     #print(sestavi)
     return sestavi
+
+
+
 
 def datum_rojstva_popravi(niz):
     if len(niz)==4:
@@ -242,9 +216,11 @@ def drzava_rojstva_popravi(niz):
     elif len(niz)!=4:
         return niz
 
+       
 
-
-ime_stolpcev = [
+def shrani_v_csv(podatki):   
+    with open('nobelovi_nagrajenci.csv', 'w', newline = '', encoding = 'utf-8') as dat:
+        pisatelj = csv.DictWriter(dat, fieldnames = [
             'ime', 
             'datum rojstva', 
             'leto rojstva', 
@@ -254,16 +230,12 @@ ime_stolpcev = [
             'država smrti',
             'področje nagrade',
             'leto nagrade'
-            ]
-
-
-def shrani_v_csv(ime_dat, podatki, ime_stolpcev):   
-    with open(ime_dat, 'w', newline = '', encoding = 'utf-8') as dat:
-        pisatelj = csv.DictWriter(dat, fieldnames = ime_stolpcev)
+            ])
         #print(ime_stolpcev)
         pisatelj.writeheader()
         pisatelj.writerows(podatki)
 
-shrani_v_csv('nobelovi_nagrajenci.csv',po_datot_z_nagrjajenci(mapa_z_nagrajenci),ime_stolpcev)
 
-#po_datot_z_nagrjajenci(mapa_z_nagrajenci)
+a=po_datot_z_nagrjajenci()
+a
+shrani_v_csv(po_datot_z_nagrjajenci())
