@@ -5,7 +5,10 @@ import os
 
 leto=2025
 headers={"User-Agent":"Mozilla/5.0"}
-teme_nagrada=[
+
+
+def koda_za_htmlje(leto):    #pridobljeni podatki 31.7.2026
+    teme_nagrada=[
     "physics",
     "chemistry",
     "medicine",
@@ -14,8 +17,6 @@ teme_nagrada=[
     "economic-sciences"
     ]
 
-
-def koda_za_htmlje(leto):    
     os.makedirs("htmlji", exist_ok=True)
 
     for stevilo in range(1901, leto + 1):
@@ -40,19 +41,5 @@ def koda_za_htmlje(leto):
             time.sleep(2)
 
     
-#koda_za_htmlje(leto)
-
-
-
-
-
-#def dobi_v_datoteko_html(leto):
-#    for tem in teme_nagrada:
-#        for i in range(1901,leto):
-#            shrani_kot_html(f'{tem},{i}.html',koda_za_htmlje(leto))
-        
-#dobi_v_datoteko_html(leto)
-
-
 
 

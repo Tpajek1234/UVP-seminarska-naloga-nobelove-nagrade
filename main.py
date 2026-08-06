@@ -4,7 +4,9 @@ import pridobi_podatke
 import izlusci
 import izlusci_nagrajence
 
+
 leto = 2025
+
 if not os.path.exists('htmlji'):
     pridobi_podatke.koda_za_htmlje(leto)
 

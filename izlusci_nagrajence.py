@@ -4,7 +4,6 @@ import re
 import csv
 
 
-#mapa_z_nagrajenci = 'nobelovi_nagrajenci'
 
 def po_datot_z_nagrjajenci():
     sez=[]
@@ -47,12 +46,10 @@ def izlusci_o_nagrajencih(preberi_html):
     smrt = re.search(r'<p class="dead-date">Died:(.*?)</p>',
                      preberi_html,
                      re.DOTALL)
-    print(vse_v_slovar(ime_dobitnika, nagrada, rojstvo, smrt))
     return vse_v_slovar(ime_dobitnika, nagrada, rojstvo, smrt)
 
 def vse_v_slovar(ime_dobitnika, nagrada, rojstvo, smrt):
     popravljeno = ime_apostrof(popravi_ime(ime_dobitnika.group(1)))
-    print(popravljeno)
     nagrada2 = odstrani_nobel_prize(popravi_ime(nagrada.group(1)))
     leto = loci_leto(nagrada2)
     samo_nagrada = loci(nagrada2)  
@@ -77,7 +74,6 @@ def vse_v_slovar(ime_dobitnika, nagrada, rojstvo, smrt):
         dan_smrti = datum_rojstva_popravi(smrt_dan)
         leto_smrti = smrt_leto
         kraj_smrti = drzava_rojstva_popravi(odstrani_oklepaje(smrt_drzava))
-        #print(kraj_smrti)
         podrocje = samo_nagrada
         leto_nagrade1 = leto
         return v_slovar(ime1, datum1, leto_rojstva, drzava_rojstva, dan_smrti, leto_smrti, kraj_smrti, podrocje, leto_nagrade1)
@@ -172,7 +168,6 @@ def loci(nagrad):
 def samo_drzava1(niz):
     if ',' in niz:
         loci_po_vejici = niz.split(',')
-        print(loci_po_vejici[-1])
         return loci_po_vejici[-1]
     else:
         return '/'
@@ -180,20 +175,17 @@ def samo_drzava1(niz):
 def samo_datum_rojstva(niz):
     if ',' in niz:
         loci_po_vejici = niz.split(',')
-        print(loci_po_vejici[0])
         return loci_po_vejici[0]
     else:
         return niz
     
 def popravi_drzava(niz):
     nov = niz.split()
-    #print(nov)
     sestavi = ''
     for beseda in range(0,len(nov)-1):
         sestavi+=nov[beseda]
         sestavi+=' '
     sestavi+=nov[len(nov)-1]
-    #print(sestavi)
     return sestavi
 
 def odstrani_oklepaje(niz):
@@ -207,7 +199,6 @@ def odstrani_oklepaje(niz):
             return drzava[najdi_okl + 1: najdi_zakl]
  
     elif drzava.endswith(')'):
-        #print(drzava[0:len(drzava)-2])
         return drzava[0:len(drzava)-1]
     else:
         return drzava
@@ -245,11 +236,7 @@ def shrani_v_csv(podatki):
             'področje nagrade',
             'leto nagrade'
             ])
-        #print(ime_stolpcev)
         pisatelj.writeheader()
         pisatelj.writerows(podatki)
 
 
-a=po_datot_z_nagrjajenci()
-a
-shrani_v_csv(po_datot_z_nagrjajenci())

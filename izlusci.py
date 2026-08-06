@@ -8,69 +8,12 @@ import os
 
 headers={"User-Agent":"Mozilla/5.0"}
 
-mapa_s_htmlji = 'htmlji'
 
-def po_datot(mapa_s_htmlji):
-    
-    slovar = {}
-
-
-    for html in os.listdir(mapa_s_htmlji):
-        if html.endswith(".html"):
-            pot = os.path.join(mapa_s_htmlji, html) 
-
-            with open(pot, encoding='utf-8') as d:
-                preberi_html = d.read()
-            #print(html)
-                vrsta_nagrade = re.findall(
-                r'\s*<header class="heading">\s*<h1>\s*(.*?)</h1>\s*</header>',
-                preberi_html,
-                re.DOTALL
-                )
-                dobitnik_nagrade = re.findall(
-                    r'<h3 itemprop="name">\s*<a\s*href="https://www.nobelprize.org/prizes/.*?/.*?/.*?/facts/".*?>\s*(.*?)</a>',
-                    preberi_html,
-                    re.DOTALL
-                    )
-                priimki_dobitnikov = re.findall(
-                    r'<h3 itemprop="name">\s*<a\s*href="https://www.nobelprize.org/prizes/.*?/.*?/(.*?)/facts/".*?>\s*.*?</a>',
-                    preberi_html,
-                    re.DOTALL
-                    )
-
-                
-                #print(dobitnik_nagrade,vrsta_nagrade)
-                for nagra in vrsta_nagrade:
-                    #print(nagra)
-                    nova=popravi_nagradi(nagra)
-                    slovar[nova]=popravi_imena_brez_t(dobitnik_nagrade)
-                #print(slovar)
-    #print(slovar) #da slovar v katerem je seznam nagrajencev po vrstah nagrad
-
-   
-
-def popravi_imena_brez_t(seznam): #funkcija ki bo popravila da bo brez t ja
-    sez=[] #dam v seznam da bo tam brez t jev
-    for t in seznam:
-
-        popravljeno_ime = t.strip()
-        sez.append(popravljeno_ime)
-    return sez
-
-def popravi_nagradi(nagr): #popravi ime da ni t-jev
-    nova_nagr = nagr.strip()
-    return nova_nagr
-    #print(popravljeno_ime)    
-    #return popravljeno_ime      
-
-#po_datot(mapa_s_htmlji)
-
-
-def izlusci_vse_povezave_nagrajencev(mapa_s_htmlji):
+def izlusci_vse_povezave_nagrajencev():
     slovar_prii = {}
-    for html in os.listdir(mapa_s_htmlji):
+    for html in os.listdir('htmlji'):
         if html.endswith(".html"):
-            pot = os.path.join(mapa_s_htmlji, html) 
+            pot = os.path.join('htmlji', html) 
 
             with open(pot, encoding='utf-8') as d:
                 preberi_html = d.read()
@@ -89,7 +32,7 @@ def izlusci_vse_povezave_nagrajencev(mapa_s_htmlji):
                     for priimek in priimki_dobitnikov:
                         if priimek in povezava:
                             slovar_prii[priimki_brez_posevnice(priimek)] = povezava
-    #print(slovar_prii)  
+    print(slovar_prii)  
                   
     return slovar_prii
 
@@ -97,21 +40,17 @@ def priimki_brez_posevnice(niz):
     novo=''
 
     popravljen_priimek=niz.split("/")
-        #print(popravljen_priimek)
+        
     for popravljen in range(0,len(popravljen_priimek)):
         novo += popravljen_priimek[popravljen]
         novo+= '-' 
     novo+=popravljen_priimek[-1]
-            #print(novo)
-        #nov_seznam.append(novo)
-            #print(popravljen_priimek)
-        #print(nov_seznam)
+
     return novo
 
-#priimki_brez_posevnice(['slo/2002/prii','sdsads/ff/sds'])
 
 
-def pobere_o_nagrajencih(slovar_prii):
+def pobere_o_nagrajencih(slovar_prii):  #podatki pobrani 2.8.2026
 
     os.makedirs("nobelovi_nagrajenci", exist_ok=True)
 
@@ -133,12 +72,7 @@ def pobere_o_nagrajencih(slovar_prii):
         
         time.sleep(2)
                     
-#pobere_o_nagrajencih(izlusci_vse_povezave_nagrajencev(mapa_s_htmlji))
 
-
-
-    
-#izlusci_vse_povezave_nagrajencev(mapa_s_htmlji)
 
 
 
@@ -147,9 +81,7 @@ def pobere_o_nagrajencih(slovar_prii):
 
 
 
-
-
-
+    
 
 
 
