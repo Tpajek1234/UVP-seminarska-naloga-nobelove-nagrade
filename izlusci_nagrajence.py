@@ -146,14 +146,14 @@ def v_slovar(
 ):
     slovar = {
         "ime": ime1,
-        "datum rojstva": datum1,
-        "leto rojstva": leto_rojstva,
-        "država rojstva": drzava_rojstva,
-        "dan smrti": dan_smrti,
-        "leto smrti": leto_smrti,
-        "država smrti": drzava_smrti,
-        "področje nagrade": podrocje,
-        "leto nagrade": leto_nagrade1,
+        "datum_rojstva": datum1,
+        "leto_rojstva": leto_rojstva,
+        "država_rojstva": drzava_rojstva,
+        "dan_smrti": dan_smrti,
+        "leto_smrti": leto_smrti,
+        "država_smrti": drzava_smrti,
+        "področje_nagrade": podrocje,
+        "leto_nagrade": leto_nagrade1,
     }
     return slovar
 
@@ -268,14 +268,14 @@ def shrani_v_csv(podatki):
             dat,
             fieldnames=[
                 "ime",
-                "datum rojstva",
-                "leto rojstva",
-                "država rojstva",
-                "dan smrti",
-                "leto smrti",
-                "država smrti",
-                "področje nagrade",
-                "leto nagrade",
+                "datum_rojstva",
+                "leto_rojstva",
+                "država_rojstva",
+                "dan_smrti",
+                "leto_smrti",
+                "država_smrti",
+                "področje_nagrade",
+                "leto_nagrade",
             ],
         )
         pisatelj.writeheader()
